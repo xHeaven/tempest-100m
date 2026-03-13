@@ -763,13 +763,9 @@
 
     /* ── Info ──────────────────────────────── */
     .info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      display: flex;
+      flex-direction: column;
       gap: 12px;
-    }
-
-    @media (max-width: 640px) {
-      .info-grid { grid-template-columns: 1fr; }
     }
 
     .info-card {
@@ -800,14 +796,24 @@
     .info-card.open .info-card-arrow { transform: rotate(180deg); }
 
     .info-card-body {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.35s ease, padding 0.25s;
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.3s ease;
     }
 
     .info-card.open .info-card-body {
-      max-height: 500px;
-      padding: 0 18px 18px;
+      grid-template-rows: 1fr;
+    }
+
+    .info-card-body-inner {
+      overflow: hidden;
+    }
+
+    .info-card-body-inner > :first-child { padding-top: 0; }
+    .info-card-body-inner > :last-child { padding-bottom: 18px; }
+
+    .info-card-body-inner {
+      padding: 0 18px;
     }
 
     .info-card-body p {
@@ -828,19 +834,54 @@
       color: var(--cyan);
     }
 
-    .prize-list {
-      list-style: none;
-      font-size: 0.85rem;
-      color: var(--text-secondary);
+    .prize-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
-    .prize-list li {
-      padding: 5px 0;
+    .prize-item {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      padding-bottom: 10px;
       border-bottom: 1px solid var(--border);
     }
 
-    .prize-list li:last-child { border-bottom: none; }
-    .prize-list .prize-icon { margin-right: 6px; }
+    .prize-item:last-child {
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .prize-rank {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
+      min-width: 110px;
+      flex-shrink: 0;
+    }
+
+    .prize-gold .prize-rank { color: var(--gold); }
+    .prize-silver .prize-rank { color: var(--silver); }
+    .prize-bronze .prize-rank { color: var(--bronze); }
+    .prize-special .prize-rank { color: var(--sky); }
+
+    .prize-details {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .prize-details li {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 3px 10px;
+    }
 
     /* ── Footer ────────────────────────────── */
     .site-footer {
@@ -1030,50 +1071,86 @@
       <h2 class="section-title">About the Challenge</h2>
       <p class="section-subtitle">Rules, prizes, and server specifications.</p>
       <div class="info-grid">
-        <div class="info-card open">
+        <div class="info-card">
           <div class="info-card-header" onclick="toggleCard(this)">
             How It Works
             <svg class="info-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
           </div>
-          <div class="info-card-body">
+          <div class="info-card-body"><div class="info-card-body-inner">
             <p>Parse a dataset of 100 million page visits from CSV into a sorted JSON file using pure PHP. Each entry maps a URL path to daily visit counts, sorted by date ascending.</p>
             <p>Fork the repo, implement <code>Parser::parse()</code>, and submit a PR. Results are benchmarked on a dedicated Mac Mini M1 with 12GB RAM.</p>
-          </div>
+          </div></div>
         </div>
         <div class="info-card">
           <div class="info-card-header" onclick="toggleCard(this)">
             Prizes
             <svg class="info-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
           </div>
-          <div class="info-card-body">
-            <ul class="prize-list">
-              <li><span class="prize-icon">&#129351;</span> PhpStorm Elephpant + Tideways Elephpant + JetBrains All Products (1yr) + AI Ultimate (3mo) + Tideways Team (1yr)</li>
-              <li><span class="prize-icon">&#129352;</span> PhpStorm Elephpant + Tideways Elephpant + JetBrains All Products (1yr) + AI Ultimate (3mo)</li>
-              <li><span class="prize-icon">&#129353;</span> PhpStorm Elephpant + Tideways Elephpant + JetBrains All Products (1yr)</li>
-              <li><span class="prize-icon">&#128642;</span> Single-core winner: PhpStorm Elephpant + JetBrains All Products (1yr)</li>
-              <li><span class="prize-icon">&#127941;</span> Random participation prize: PhpStorm Elephpant + JetBrains All Products (1yr)</li>
-            </ul>
-          </div>
+          <div class="info-card-body"><div class="info-card-body-inner">
+            <div class="prize-grid">
+              <div class="prize-item prize-gold">
+                <div class="prize-rank">1st Place</div>
+                <ul class="prize-details">
+                  <li>PhpStorm Elephpant</li>
+                  <li>Tideways Elephpant</li>
+                  <li>JetBrains All Products (1yr)</li>
+                  <li>AI Ultimate (3mo)</li>
+                  <li>Tideways Team (1yr)</li>
+                </ul>
+              </div>
+              <div class="prize-item prize-silver">
+                <div class="prize-rank">2nd Place</div>
+                <ul class="prize-details">
+                  <li>PhpStorm Elephpant</li>
+                  <li>Tideways Elephpant</li>
+                  <li>JetBrains All Products (1yr)</li>
+                  <li>AI Ultimate (3mo)</li>
+                </ul>
+              </div>
+              <div class="prize-item prize-bronze">
+                <div class="prize-rank">3rd Place</div>
+                <ul class="prize-details">
+                  <li>PhpStorm Elephpant</li>
+                  <li>Tideways Elephpant</li>
+                  <li>JetBrains All Products (1yr)</li>
+                </ul>
+              </div>
+              <div class="prize-item prize-special">
+                <div class="prize-rank">Single-thread</div>
+                <ul class="prize-details">
+                  <li>PhpStorm Elephpant</li>
+                  <li>JetBrains All Products (1yr)</li>
+                </ul>
+              </div>
+              <div class="prize-item prize-special">
+                <div class="prize-rank">Random draw</div>
+                <ul class="prize-details">
+                  <li>PhpStorm Elephpant</li>
+                  <li>JetBrains All Products (1yr)</li>
+                </ul>
+              </div>
+            </div>
+          </div></div>
         </div>
         <div class="info-card">
           <div class="info-card-header" onclick="toggleCard(this)">
             Rules
             <svg class="info-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
           </div>
-          <div class="info-card-body">
+          <div class="info-card-body"><div class="info-card-body-inner">
             <p>Solutions must be written in PHP only. No FFI, no external tools, no internet access. Your script may only work within the project directory.</p>
             <p>The solution must validate against the real dataset. Improvements of <code>0.01s</code> or more are counted. Ties are broken by submission time.</p>
-          </div>
+          </div></div>
         </div>
         <div class="info-card">
           <div class="info-card-header" onclick="toggleCard(this)">
             Server Specs
             <svg class="info-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
           </div>
-          <div class="info-card-body">
-            <p>Mac Mini M1 with 12GB available RAM. JIT is disabled. PHP with OPcache enabled.</p>
+          <div class="info-card-body"><div class="info-card-body-inner">
+            <p>Mac Mini M1 with 12GB available RAM. JIT is disabled. OPcache is disabled.</p>
             <p>Each submission is run individually on the dedicated server to prevent bias. Results are manually verified before benchmarking.</p>
-          </div>
+          </div></div>
         </div>
       </div>
     </section>
@@ -1512,7 +1589,11 @@
 
   window.toggleCard = function(header) {
     const card = header.parentElement;
-    card.classList.toggle('open');
+    const isOpen = card.classList.contains('open');
+
+    document.querySelectorAll('.info-card.open').forEach(c => c.classList.remove('open'));
+
+    if (!isOpen) card.classList.add('open');
   };
 
   updateDeadline();
